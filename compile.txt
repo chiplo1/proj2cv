@@ -1,0 +1,1 @@
+g++ proj2.cpp -o output `pkg-config --cflags --libs opencv`
