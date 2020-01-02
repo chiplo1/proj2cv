@@ -1,4 +1,7 @@
 #include "opencv2/opencv.hpp"
+#include "opencv2/highgui.hpp"
+#include "opencv2/objdetect.hpp"
+#include "opencv2/opencv.hpp"
 #include <iostream>
 
 using namespace cv;
@@ -7,6 +10,7 @@ using namespace std;
 int main( void )
 {
     VideoCapture cap;
+
     // open the default camera, use something different from 0 otherwise;
     // Check VideoCapture documentation.
     if(!cap.open(0))
@@ -19,7 +23,7 @@ int main( void )
 		  
 		  // CODE HERE
 		  
-		 printf("channels: %d", frame.channels());
+		 //printf("channels: %d", frame.channels());
 		  
           imshow("Video Display", frame);
 		  
