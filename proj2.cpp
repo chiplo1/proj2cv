@@ -19,7 +19,7 @@ int main(){
     cout << "Error opening video stream or file" << endl;
     return -1;
   }
-  Mat frame, fgMask, fgMaskNoShad, writeFrame, show;
+  Mat frame, fgMask, fgMaskNoShad, writeFrame, show, background;
   
 	int choice;
 	choice = 1;
@@ -37,6 +37,8 @@ int main(){
      //Create trackbar to change contrast
      int iSliderValue2 = 50;
      createTrackbar("Contrast", "Frame", &iSliderValue2, 100);
+	
+	bool flag = true;
 	
   while(1){
     // Capture frame-by-frame
@@ -85,7 +87,13 @@ int main(){
 	
 	writeFrame.convertTo(dst, -1, dContrast, iBrightness); 
 	
+	if(flag){
+		background = dst;
+		flag = false;
+	}
+	
 	imshow( "Frame", dst );
+	imshow( "Frame2", background );
 	
 	//printf("%d\n",writeFrame.channels());
 	video.write(dst);
