@@ -19,7 +19,7 @@ int main(){
     cout << "Error opening video stream or file" << endl;
     return -1;
   }
-  Mat frame, fgMask, fgMaskNoShad, writeFrame, show, background;
+  Mat frame, fgMask, fgMaskNoShad, writeFrame, show, teste, background;
   
 	int choice;
 	choice = 1;
@@ -46,23 +46,10 @@ int main(){
     // If the frame is empty, break immediately
     if (frame.empty())
       break;
-    pBackSub->apply(frame, fgMask);
-    rectangle(frame, Point(10, 2), Point(100, 2), Scalar(255, 255, 255), -1);
-	
-    
-	stringstream ss;
-    ss << cap.get(CV_CAP_PROP_FPS);
-    string frameNumberString = ss.str();
-    putText(frame, frameNumberString.c_str(), cv::Point(15, 15), FONT_HERSHEY_SIMPLEX, 0.5 , Scalar(0,0,0));
-	
-	
-    //Proximas 4 linhas apagam a sombra (parte cinza do fgMask)
-    blur(fgMask, fgMaskNoShad, Size(15, 15), Point(-1, -1));
-    threshold(fgMask, fgMaskNoShad, 128, 255, THRESH_BINARY);
-    dilate(fgMaskNoShad, fgMaskNoShad, Mat(), Point(-1, -1), 2, 1, 1);
-    erode(fgMaskNoShad, fgMaskNoShad, Mat(), Point(-1, -1), 2, 1, 1);
+
+    //dilate(fgMaskNoShad, fgMaskNoShad, Mat(), Point(-1, -1), 2, 1, 1);
+    //erode(fgMaskNoShad, fgMaskNoShad, Mat(), Point(-1, -1), 2, 1, 1);
     // Display the resulting frame
-	
 	
 	
 	
@@ -90,13 +77,29 @@ int main(){
 	if(flag){
 		background = dst;
 		flag = false;
+		video.write(background);
 	}
 	
+	pBackSub->apply(frame, fgMask);
+    rectangle(frame, Point(10, 2), Point(100, 2), Scalar(255, 255, 255), -1);
+    stringstream ss;
+    ss << cap.get(CV_CAP_PROP_FPS);
+    string frameNumberString = ss.str();
+    putText(frame, frameNumberString.c_str(), Point(15, 15), FONT_HERSHEY_SIMPLEX, 0.5 , Scalar(0,0,0));
+	
+	
+    //Proximas 4 linhas apagam a sombra (parte cinza do fgMask)
+    blur(fgMask, fgMaskNoShad, Size(15, 15), Point(-1, -1));
+    threshold(fgMask, fgMaskNoShad, 128, 255, THRESH_BINARY);
+	
+	frame.copyTo(teste, fgMaskNoShad);
+	
 	imshow( "Frame", dst );
-	imshow( "Frame2", background );
+	imshow("teste", teste);
+	imshow( "Background", background );
 	
 	//printf("%d\n",writeFrame.channels());
-	video.write(dst);
+	video.write(teste);
 	
     // Press  ESC on keyboard to exit
     char c=(char)waitKey(25);
