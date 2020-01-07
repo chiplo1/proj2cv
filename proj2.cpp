@@ -95,7 +95,7 @@ int main(){
 	frame.copyTo(teste, fgMaskNoShad);
 	
 	imshow( "Frame", dst );
-	imshow("teste", teste);
+	imshow("NoShadows", teste);
 	imshow( "Background", background );
 	
 	//printf("%d\n",writeFrame.channels());
