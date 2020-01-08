@@ -19,7 +19,7 @@ int main(){
     cout << "Error opening video stream or file" << endl;
     return -1;
   }
-  Mat frame, fgMask, fgMaskNoShad, writeFrame, show, teste, background;
+  Mat frame, fgMask, fgMaskNoShad, writeFrame, show, teste, background, last;
   
 	int choice;
 	choice = 1;
@@ -27,7 +27,7 @@ int main(){
 	int frame_width = cap.get(CV_CAP_PROP_FRAME_WIDTH); 
 	int frame_height = cap.get(CV_CAP_PROP_FRAME_HEIGHT); 
 	
-	VideoWriter video("output.avi",CV_FOURCC('M','J','P','G'),10, Size(frame_width,frame_height));
+	VideoWriter video("output.avi",CV_FOURCC('M','J','P','G'),30, Size(frame_width,frame_height));
 	
 	namedWindow("Frame", 1);
 	
@@ -51,22 +51,14 @@ int main(){
     //erode(fgMaskNoShad, fgMaskNoShad, Mat(), Point(-1, -1), 2, 1, 1);
     // Display the resulting frame
 	
+	writeFrame = frame;
 	
-	
-	switch(choice) {
+	/*switch(choice) {
 		case 1:
 			//imshow( "Frame", dst );
 			writeFrame = frame;
 			break;
-		case 2:
-			//imshow("Frame", fgMask);
-			writeFrame = fgMask;
-			break;
-		case 3:
-			//imshow("Frame", fgMaskNoShad);
-			writeFrame = fgMaskNoShad;
-			break;
-	}
+	}*/
 	
 	Mat dst;
 	int iBrightness  = iSliderValue1 - 50;
@@ -92,31 +84,27 @@ int main(){
     blur(fgMask, fgMaskNoShad, Size(15, 15), Point(-1, -1));
     threshold(fgMask, fgMaskNoShad, 128, 255, THRESH_BINARY);
 	
-	frame.copyTo(teste, fgMaskNoShad);
-	
+	dst.copyTo(teste, fgMaskNoShad);
+	addWeighted(teste, 1.0, background, 0.5, 0.0, last);
 	imshow( "Frame", dst );
+	imshow( "fgMask", fgMask );
+	imshow( "fgMaskNoShad", fgMaskNoShad );
 	imshow("NoShadows", teste);
-	imshow( "Background", background );
+	imshow( "Last", last );
 	
 	//printf("%d\n",writeFrame.channels());
-	video.write(teste);
+	video.write(last);
+	
 	
     // Press  ESC on keyboard to exit
     char c=(char)waitKey(25);
     if(c==27)
       break;
+	/*
 	if(c==49 && choice != 1){
 		//destroyAllWindows();
 		choice = 1;
-	}
-	if(c==50 && choice != 2){
-		//destroyAllWindows();
-		choice = 2;
-	}
-	if(c==51 && choice != 3){
-		//destroyAllWindows();
-		choice = 3;
-	}
+	}*/
 	
   }
 
